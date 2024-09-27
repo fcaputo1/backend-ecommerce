@@ -1,9 +1,8 @@
-const express = require('express')
-const app = express()
 const PORT = 3000
 const mongoose = require('mongoose')
+const app = require('./app')
 
-const DATABASE_URL = "mongodb+srv://franciscocaputo:81zNztcE7eH8nplu@ecommerce.ouerw.mongodb.net/"
+const DATABASE_URL = "mongodb+srv://franciscocaputo:81zNztcE7eH8nplu@ecommerce.ouerw.mongodb.net/ecommerce"
 
 mongoose.connect(DATABASE_URL).then(() => {
 
