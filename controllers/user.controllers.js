@@ -9,7 +9,10 @@ async function getUsers(req, res)  {
         
     } catch (error) {
         console.log(error)
-        return res.status(500).send("Error al obtener usuarios")
+        return res.status(500).send({
+            ok: false,
+            message: "Error al obtener usuarios"
+        })
     }
 }
 
@@ -25,7 +28,10 @@ async function createUser(req, res) {
 
     }).catch((error) => {
         console.log(error)
-        return res.status(500).send("El usuario no se pudo crear")
+        return res.status(500).send({
+            ok: false,
+            message: "El usuario no se pudo crear"
+        })
     })
 }
 
@@ -37,8 +43,8 @@ async function getUserById(req, res) {
 
         if (!user) {
             return res.status(404).send({
-                message: "El usuario no fue encontrado",
-                ok: false
+                ok: false,
+                message: "El usuario no fue encontrado"
             })
         }
 
@@ -50,7 +56,10 @@ async function getUserById(req, res) {
 
     } catch (error) {
         console.log(error)
-        return res.status(500).send("Error al obtener el usuario en la DB")
+        return res.status(500).send({
+            ok: false,
+            message: "Error al obtener el usuario en la DB"
+        })
     }
 }
 
@@ -62,8 +71,8 @@ async function deleteUser(req, res) {
 
         if (!deletedUser) {
             return res.status(404).send({
-                message: "El usuario a borrar no fue encontrado",
-                ok: false
+                ok: false,
+                message: "El usuario a borrar no fue encontrado"
             })
         }
 
