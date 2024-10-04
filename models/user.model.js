@@ -4,13 +4,58 @@ const Schema = mongoose.Schema
 //Definimos el esquema del modelo
 
 const userSchema = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String },
-    birthday: { type: String },
-    country: { type: String },
-    avatar: { type: String },
-    observations: { type: String }
+    name: { type: String, 
+        required: true, 
+        minLength: 3, 
+        maxLength: 80 
+    },
+    email: { 
+        type: String, 
+        required: true, 
+        trim: true, 
+        minLength: 5, 
+        maxLength: 100 , 
+        unique: true, 
+        index: true,
+        validate: {
+            validator: (value) => {
+                const regex = /^[A-Za-z0-9._+\-']+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+                return regex.test(value) 
+            }
+        }
+    },
+    password: { 
+        type: String,
+        required: true,
+        minLength: 4,
+        maxLength: 70,
+        trim: true
+    },
+    birthday: { 
+        type: String,
+        required: true,
+    },
+    country: { 
+        type: String, 
+        required: true,
+        minLength: 3,
+        maxLength: 100
+    },
+    avatar: { 
+        type: String
+    },
+    role: {
+        type: String,
+        default: "client",
+        enum: ["client", "admin"]
+    },
+    observations: { 
+        type: String 
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 module.exports = mongoose.model("User", userSchema)

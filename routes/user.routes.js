@@ -14,7 +14,9 @@ router.get("/users/:id", userControllers.getUserById)
 //Borra un usuario
 router.delete("/users/:id", userControllers.deleteUser)
 
-//TODO UPDATE actualizar usuario
+//Actualiza un usuario
+router.put("/users/:id", userControllers.updateUser)
+
 //TODO LOGIN
 
 //Devolvemos los endpoints

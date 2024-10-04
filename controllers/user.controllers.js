@@ -1,4 +1,6 @@
 const User = require('../models/user.model')
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 
 //Trae todos los usuarios
 async function getUsers(req, res)  {
@@ -19,18 +21,36 @@ async function getUsers(req, res)  {
 //Crea un usuario
 async function createUser(req, res) {
 
+    if (!req.body.password) {
+        return res.status(400).send({
+            ok: false,
+            message: "La contraseña es requerida"
+        })
+    }
+
     const user = new User(req.body)
 
-    user.save().then((newUser) => {
+    bcrypt.hash(user.password, saltRounds, (error, hash) => {
 
-        console.log(newUser);
-        return res.status(201).send(newUser)
+        if (error) {
+            return res.status(500).send({
+                ok: false,
+                message: "Error al crear usuario"
+            })
+        }
 
-    }).catch((error) => {
-        console.log(error)
-        return res.status(500).send({
-            ok: false,
-            message: "El usuario no se pudo crear"
+        user.password = hash
+        user.save().then((newUser) => {
+
+            console.log(newUser);
+            return res.status(201).send(newUser)
+    
+        }).catch((error) => {
+            console.log(error)
+            return res.status(500).send({
+                ok: false,
+                message: "El usuario no se pudo crear"
+            })
         })
     })
 }
@@ -91,9 +111,31 @@ async function deleteUser(req, res) {
     }
 }
 
+//Actualizar usuario
+async function updateUser(req,res) {
+    try {
+        const { id } = req.params
+        const user = await User.findByIdAndUpdate(id, req.body, { new: true })
+
+        return res.status(200).send({
+            ok: true,
+            message: "Usuario actualizado correctamente",
+            user
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            ok: false,
+            message: "Error al actualizar el usuario"
+        })
+    }
+}
+
 module.exports = {
     getUsers,
     createUser,
     getUserById,
-    deleteUser
+    deleteUser,
+    updateUser
 }
