@@ -1,4 +1,3 @@
-const { userInfo } = require('os')
 const Product = require('../models/product.model')
 
 //Trae todos los productos
@@ -95,6 +94,13 @@ async function updateProduct(req,res) {
     try {
         const { id } = req.params
         const product = await Product.findByIdAndUpdate(id, req.body, { new: true })
+
+        if (!product) {
+            return res.status(404).send({
+                ok: true,
+                message: "Producto no encontrado"
+            })
+        }
 
         return res.status(200).send({
             ok: true,
