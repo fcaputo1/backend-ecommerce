@@ -97,7 +97,7 @@ async function updateProduct(req,res) {
 
         if (!product) {
             return res.status(404).send({
-                ok: true,
+                ok: false,
                 message: "Producto no encontrado"
             })
         }

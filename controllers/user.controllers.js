@@ -117,6 +117,13 @@ async function updateUser(req,res) {
         const { id } = req.params
         const user = await User.findByIdAndUpdate(id, req.body, { new: true })
 
+        if(!user) {
+            return res.status(404).send({
+                ok: false,
+                message: "Usuario no encontrado"
+            })
+        }
+
         return res.status(200).send({
             ok: true,
             message: "Usuario actualizado correctamente",
