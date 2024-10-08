@@ -1,6 +1,8 @@
 const User = require('../models/user.model')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
+const jwt = require('jsonwebtoken')
+const SECRET = process.env.SECRET
 
 //Trae todos los usuarios
 async function getUsers(req, res)  {
@@ -139,10 +141,66 @@ async function updateUser(req,res) {
     }
 }
 
+async function login(req, res) {
+    try {
+        const { email, password } = req.body
+
+        //Revisa si llega el email o password desde el frontend
+        if(!email || !password) {
+            return res.status(400).send({
+                ok: false,
+                message: "Email y contraseña requeridos"
+            })
+        }
+
+        //Busca el user en la DB
+        const user = await User.findOne({ email })
+
+        if(!user) {
+            return res.status(400).send({
+                ok: false,
+                message: "Alguno de los datos es incorrecto"
+            })
+        }
+
+        //Comparar la contraseña con la guardada en la DB
+        const match = await bcrypt.compare(password, user.password)
+
+        if(!match) {
+            return res.status(400).send({
+                ok: false, 
+                message: "Algunos de los datos es incorrecto"
+            })
+        }
+
+        //Eliminar la propiedad password
+        user.password = undefined
+        user.__v = undefined
+
+        //Generar un token para firmar datos del usuario
+        const token = jwt.sign(user.toJSON(), SECRET, { expiresIn: '1h' })
+        
+        return res.send({
+            ok: true, 
+            message: "Login exitoso",
+            user,
+            token
+        })
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            ok: false,
+            message: "Error al autenticar usuario"
+        })
+    }
+}
+
 module.exports = {
     getUsers,
     createUser,
     getUserById,
     deleteUser,
-    updateUser
+    updateUser,
+    login
 }

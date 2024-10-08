@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const userControllers = require('../controllers/user.controllers')
+//Middlewares
+const validation = require('../middlewares/auth')
 
 //Trae los usuarios desde la DB
-router.get("/users", userControllers.getUsers)
+router.get("/users", validation, userControllers.getUsers)
 
 //Guarda usuarios en la DB
 router.post("/users", userControllers.createUser)
@@ -17,7 +19,8 @@ router.delete("/users/:id", userControllers.deleteUser)
 //Actualiza un usuario
 router.put("/users/:id", userControllers.updateUser)
 
-//TODO LOGIN
+//Loguear al usuario
+router.post("/login", userControllers.login)
 
 //Devolvemos los endpoints
 module.exports = router
