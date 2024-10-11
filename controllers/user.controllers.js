@@ -61,6 +61,12 @@ async function createUser(req, res) {
 async function getUserById(req, res) {
     try {
         const { id } = req.params
+        if (req.user.role !== "admin" && id !== req.user._id) {
+            return res.status(403).send({
+                ok: false,
+                message: "No tienes permisos para acceder a este usuario"
+            })
+        }
         const user = await User.findById(id)
 
         if (!user) {
@@ -69,6 +75,9 @@ async function getUserById(req, res) {
                 message: "El usuario no fue encontrado"
             })
         }
+
+        user.password = undefined
+        console.log(user)
 
         return res.status(200).send({
             ok: true,
@@ -117,6 +126,13 @@ async function deleteUser(req, res) {
 async function updateUser(req,res) {
     try {
         const { id } = req.params
+
+        if (req.user.role !== "admin" && ! id !== req.user._id) {
+            return res.status(403).send({
+                ok: false,
+                message: "No tienes permiso para actualizar el usuario"
+            })
+        }
         const user = await User.findByIdAndUpdate(id, req.body, { new: true })
 
         if(!user) {
@@ -141,6 +157,7 @@ async function updateUser(req,res) {
     }
 }
 
+//Login
 async function login(req, res) {
     try {
         const { email, password } = req.body
