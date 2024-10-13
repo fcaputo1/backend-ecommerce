@@ -77,7 +77,7 @@ async function deleteProduct(req, res) {
         return res.status(200).send({
             ok:true,
             message: "El producto fue borrado correctamente",
-            deleteProduct
+            deletedProduct
         })
 
     } catch (error) {
