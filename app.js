@@ -2,6 +2,10 @@ const express = require('express')
 const app = express()
 const userRoutes = require('./routes/user.routes')
 const productRoutes = require('./routes/product.routes')
+const cors = require('cors')
+
+//Habilitamos uso de los CORS
+app.use(cors())
 
 //Habilitamos método JSON para poder leer los datos del body
 app.use(express.json())

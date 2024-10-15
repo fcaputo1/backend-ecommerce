@@ -127,7 +127,7 @@ async function updateUser(req,res) {
     try {
         const { id } = req.params
 
-        if (req.user.role !== "admin" && ! id !== req.user._id) {
+        if (req.user.role !== "admin" && !id !== req.user._id) {
             return res.status(403).send({
                 ok: false,
                 message: "No tienes permiso para actualizar el usuario"

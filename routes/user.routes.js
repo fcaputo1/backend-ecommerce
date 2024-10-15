@@ -6,7 +6,7 @@ const validation = require('../middlewares/auth')
 const isAdmin = require('../middlewares/isAdmin')
 
 //Trae los usuarios desde la DB
-router.get("/users", userControllers.getUsers)
+router.get("/users", validation, userControllers.getUsers)
 
 //Guarda usuarios en la DB
 router.post("/users", userControllers.createUser)
