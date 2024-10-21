@@ -8,7 +8,9 @@ const productSchema = new Schema({
         type: String,
         required: true,
         minLength: 3,
-        maxLength: 80
+        maxLength: 80,
+        lowercase: true,
+        trim: true
     },
     price: {
         type: Number,
@@ -30,6 +32,10 @@ const productSchema = new Schema({
     image: {
         type: String,
         required: true
+    },
+    active: {
+        type: Boolean,
+        default: true 
     }
 })
 

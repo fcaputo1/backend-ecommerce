@@ -3,7 +3,19 @@ const Product = require('../models/product.model')
 //Trae todos los productos
 async function getProducts(req, res)  {
     try {
-        const products = await Product.find()
+        const filter = []
+
+        if (req.query.name) {
+            filter.push({ name: { $regex: req.query.name, $options: 'i' } })
+        }
+
+        if (req.query.min_price) {
+            filter.push({ price: { $gte: req.query.min_price } })
+        }
+
+        const query = filter.length > 0 ? { $and: filter } : {}
+        const products = await Product.find(query).select({ __v: 1 }).sort({ name: 1 }).collation({ locale: 'es' })
+
         console.log(products)
         return res.status(200).send(products)
         
@@ -23,7 +35,10 @@ async function createProduct(req, res) {
     try {
         const newProduct = await product.save()
         console.log(newProduct)
-        return res.status(201).send(newProduct)
+        return res.status(201).send({
+            message: "Producto creado correctamente",
+            product: newProduct
+        })
     } catch (error) {
         console.log(error)
         return res.status(500).send({
