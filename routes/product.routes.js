@@ -2,14 +2,14 @@ const express = require('express')
 const router = express.Router()
 const productControllers = require('../controllers/product.controllers')
 const upload = require('../middlewares/uploadFile')
-//const validation = require('../middlewares/auth')
-//const isAdmin = require('../middlewares/isAdmin')
+const validation = require('../middlewares/auth')
+const isAdmin = require('../middlewares/isAdmin')
 
 //Trae los productos desde la DB
 router.get("/products", productControllers.getProducts)
 
 //Crea un producto en la DB
-router.post("/products", [ upload ], productControllers.createProduct) //añadir isadmin y validation
+router.post("/products", [ validation, isAdmin, upload ], productControllers.createProduct) //añadir isadmin y validation
 
 //Trae un producto específico
 router.get("/products/:id", productControllers.getProductById)

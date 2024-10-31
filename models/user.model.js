@@ -38,8 +38,7 @@ const userSchema = new Schema({
     country: { 
         type: String, 
         required: true,
-        minLength: 3,
-        maxLength: 100
+        enum: ["AR", "CH", "CO", "BR", "PA", "UY", "VE"]
     },
     avatar: { 
         type: String

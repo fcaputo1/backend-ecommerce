@@ -32,6 +32,10 @@ async function createUser(req, res) {
 
     const user = new User(req.body)
 
+    if(req.file) {
+        user.avatar = req.file.filename
+    }
+
     bcrypt.hash(user.password, saltRounds, (error, hash) => {
 
         if (error) {

@@ -13,6 +13,6 @@ const storage = multer.diskStorage({
     }
 })
 
-const uploadUser = multer({ storage }).single('image') //nombre del campo a subir, usar avatar para user
+const uploadUser = multer({ storage }).single('avatar') //nombre del campo a subir, usar avatar para user
 
 module.exports = uploadUser
