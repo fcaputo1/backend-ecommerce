@@ -1,12 +1,12 @@
 const Product = require('../models/product.model')
 
 //Trae todos los productos
-async function getProducts(req, res)  {
+async function getProducts(req, res) {
     try {
         const products = await Product.find()
         console.log(products)
         return res.status(200).send(products)
-        
+
     } catch (error) {
         console.log(error)
         return res.status(500).send({
@@ -20,7 +20,7 @@ async function getProducts(req, res)  {
 async function createProduct(req, res) {
     const product = new Product(req.body)
 
-    if(req.file) {
+    if (req.file) {
         product.image = req.file.filename
     }
 
@@ -43,7 +43,9 @@ async function createProduct(req, res) {
 //Traer un producto en particular
 async function getProductById(req, res) {
     try {
-        const { id } = req.params
+        const {
+            id
+        } = req.params
         const product = await Product.findById(id)
 
         if (!product) {
@@ -71,7 +73,9 @@ async function getProductById(req, res) {
 //Borrar producto
 async function deleteProduct(req, res) {
     try {
-        const { id } = req.params
+        const {
+            id
+        } = req.params
         const deletedProduct = await Product.findByIdAndDelete(id)
 
         if (!deletedProduct) {
@@ -82,7 +86,7 @@ async function deleteProduct(req, res) {
         }
 
         return res.status(200).send({
-            ok:true,
+            ok: true,
             message: "El producto fue borrado correctamente",
             deletedProduct
         })
@@ -90,37 +94,45 @@ async function deleteProduct(req, res) {
     } catch (error) {
         console.log(error)
         return res.status(500).send({
-            ok:false,
+            ok: false,
             message: "Error al borrar el producto"
         })
     }
 }
 
 //Actualizar un producto
-async function updateProduct(req,res) {
+async function updateProduct(req, res) {
     try {
-        const { id } = req.params
-        const product = await Product.findByIdAndUpdate(id, req.body, { new: true })
+        const { id: _id } = req.params;
 
-        if (!product) {
+        // Si hay una imagen nueva en la solicitud, la agrega a req.body
+        if (req.file) {
+            req.body.image = req.file.filename
+        }
+
+        // Realizar la actualización del producto con la nueva imagen (si existe) y otros datos
+        const updatedProduct = await Product.findByIdAndUpdate(_id, req.body, {
+            new: true
+        });
+
+        if (!updatedProduct) {
             return res.status(404).send({
                 ok: false,
                 message: "Producto no encontrado"
-            })
+            });
         }
 
         return res.status(200).send({
             ok: true,
             message: "Producto actualizado correctamente",
-            product
-        })
-
+            product: updatedProduct
+        });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send({
             ok: false,
             message: "Error al actualizar el producto"
-        })
+        });
     }
 }
 

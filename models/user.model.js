@@ -41,7 +41,8 @@ const userSchema = new Schema({
         enum: ["AR", "CH", "CO", "BR", "PA", "UY", "VE"]
     },
     avatar: { 
-        type: String
+        type: String, 
+        default: 'default-user.png'
     },
     role: {
         type: String,

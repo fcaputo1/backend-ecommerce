@@ -23,7 +23,7 @@ const productSchema = new Schema({
     category: {
         type: String,
         required: true,
-        enum: ["Autos de Lujo", "Auto Deportivo", "Super Deportivo"]
+        enum: ["Lujo", "Deportivo", "SuperDeportivo"]
     },
     createdAt: {
         type: Date,

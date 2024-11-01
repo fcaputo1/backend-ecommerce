@@ -18,6 +18,6 @@ router.get("/products/:id", productControllers.getProductById)
 router.delete("/products/:id", productControllers.deleteProduct)
 
 //Editar un producto
-router.put("/products/:id", [ upload ], productControllers.updateProduct)
+router.put("/products/:id", [ validation, isAdmin, upload ], productControllers.updateProduct)
 
 module.exports = router
