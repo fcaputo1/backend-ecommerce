@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken')
 const SECRET = process.env.SECRET
 
 //Trae todos los usuarios
-async function getUsers(req, res)  {
+async function getUsers(req, res) {
     try {
         const users = await User.find()
         console.log(users)
         return res.status(200).send(users)
-        
+
     } catch (error) {
         console.log(error)
         return res.status(500).send({
@@ -32,7 +32,7 @@ async function createUser(req, res) {
 
     const user = new User(req.body)
 
-    if(req.file) {
+    if (req.file) {
         user.avatar = req.file.filename
     }
 
@@ -50,7 +50,7 @@ async function createUser(req, res) {
 
             console.log(newUser);
             return res.status(201).send(newUser)
-    
+
         }).catch((error) => {
             console.log(error)
             return res.status(500).send({
@@ -64,7 +64,9 @@ async function createUser(req, res) {
 //Trae un usuario en particular
 async function getUserById(req, res) {
     try {
-        const { id } = req.params
+        const {
+            id
+        } = req.params
         if (req.user.role !== "admin" && id !== req.user._id) {
             return res.status(403).send({
                 ok: false,
@@ -101,7 +103,9 @@ async function getUserById(req, res) {
 //Borrar usuario
 async function deleteUser(req, res) {
     try {
-        const { id } = req.params
+        const {
+            id
+        } = req.params
         const deletedUser = await User.findByIdAndDelete(id)
 
         if (!deletedUser) {
@@ -112,7 +116,7 @@ async function deleteUser(req, res) {
         }
 
         return res.status(200).send({
-            ok:true,
+            ok: true,
             message: "El usuario fue borrado correctamente",
             deletedUser
         })
@@ -120,14 +124,14 @@ async function deleteUser(req, res) {
     } catch (error) {
         console.log(error)
         return res.status(500).send({
-            ok:false,
+            ok: false,
             message: "Error al borrar el usuario"
         })
     }
 }
 
 //Actualizar usuario
-async function updateUser(req,res) {
+async function updateUser(req, res) {
     try {
         const { id } = req.params
 
@@ -137,9 +141,23 @@ async function updateUser(req,res) {
                 message: "No tienes permiso para actualizar el usuario"
             })
         }
-        const user = await User.findByIdAndUpdate(id, req.body, { new: true })
 
-        if(!user) {
+        // Si hay una nueva imagen, establece `avatar` en la nueva imagen; de lo contrario, conserva el avatar actual
+        if (req.file) {
+            req.body.avatar = req.file.filename
+        } else {
+            // Conserva el avatar actual del usuario
+            const existingUser = await User.findById(id)
+            if (existingUser) {
+                req.body.avatar = existingUser.avatar
+            }
+        }
+
+        const user = await User.findByIdAndUpdate(id, req.body, {
+            new: true
+        })
+
+        if (!user) {
             return res.status(404).send({
                 ok: false,
                 message: "Usuario no encontrado"
@@ -164,10 +182,13 @@ async function updateUser(req,res) {
 //Login
 async function login(req, res) {
     try {
-        const { email, password } = req.body
+        const {
+            email,
+            password
+        } = req.body
 
         //Revisa si llega el email o password desde el frontend
-        if(!email || !password) {
+        if (!email || !password) {
             return res.status(400).send({
                 ok: false,
                 message: "Email y contraseña requeridos"
@@ -175,9 +196,11 @@ async function login(req, res) {
         }
 
         //Busca el user en la DB
-        const user = await User.findOne({ email })
+        const user = await User.findOne({
+            email
+        })
 
-        if(!user) {
+        if (!user) {
             return res.status(400).send({
                 ok: false,
                 message: "Alguno de los datos es incorrecto"
@@ -187,9 +210,9 @@ async function login(req, res) {
         //Comparar la contraseña con la guardada en la DB
         const match = await bcrypt.compare(password, user.password)
 
-        if(!match) {
+        if (!match) {
             return res.status(400).send({
-                ok: false, 
+                ok: false,
                 message: "Algunos de los datos es incorrecto"
             })
         }
@@ -199,15 +222,17 @@ async function login(req, res) {
         user.__v = undefined
 
         //Generar un token para firmar datos del usuario
-        const token = jwt.sign(user.toJSON(), SECRET, { expiresIn: '1h' })
-        
+        const token = jwt.sign(user.toJSON(), SECRET, {
+            expiresIn: '1h'
+        })
+
         return res.send({
-            ok: true, 
+            ok: true,
             message: "Login exitoso",
             user,
             token
         })
-        
+
     } catch (error) {
         console.log(error)
         res.status(500).send({
