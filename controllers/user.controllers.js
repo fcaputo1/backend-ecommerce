@@ -64,9 +64,16 @@ async function createUser(req, res) {
 //Trae un usuario en particular
 async function getUserById(req, res) {
     try {
-        const {
-            id
-        } = req.params
+        const { id } = req.params
+
+        // Verificar que el token sea válido; si no, devuelve 401
+        if (!req.user) {
+            return res.status(401).send({
+                ok: false,
+                message: "Token inválido o expirado"
+            })
+        }
+
         if (req.user.role !== "admin" && id !== req.user._id) {
             return res.status(403).send({
                 ok: false,
@@ -103,9 +110,16 @@ async function getUserById(req, res) {
 //Borrar usuario
 async function deleteUser(req, res) {
     try {
-        const {
-            id
-        } = req.params
+        const { id } = req.params
+
+        // Verificar que el token sea válido; si no, devuelve 401
+        if (!req.user) {
+            return res.status(401).send({
+                ok: false,
+                message: "Token inválido o expirado"
+            });
+        }
+
         const deletedUser = await User.findByIdAndDelete(id)
 
         if (!deletedUser) {
@@ -134,6 +148,14 @@ async function deleteUser(req, res) {
 async function updateUser(req, res) {
     try {
         const { id } = req.params
+
+        // Verificar que el token sea válido; si no, devuelve 401
+        if (!req.user) {
+            return res.status(401).send({
+                ok: false,
+                message: "Token inválido o expirado"
+            });
+        }
 
         if (req.user.role !== "admin" && !id !== req.user._id) {
             return res.status(403).send({
@@ -182,10 +204,7 @@ async function updateUser(req, res) {
 //Login
 async function login(req, res) {
     try {
-        const {
-            email,
-            password
-        } = req.body
+        const { email, password } = req.body
 
         //Revisa si llega el email o password desde el frontend
         if (!email || !password) {

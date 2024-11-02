@@ -9,7 +9,7 @@ const isAdmin = require('../middlewares/isAdmin')
 router.get("/products", productControllers.getProducts)
 
 //Crea un producto en la DB
-router.post("/products", [ validation, isAdmin, upload ], productControllers.createProduct) //añadir isadmin y validation
+router.post("/products", [ validation, isAdmin, upload ], productControllers.createProduct)
 
 //Trae un producto específico
 router.get("/products/:id", productControllers.getProductById)

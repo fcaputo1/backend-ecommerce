@@ -4,6 +4,7 @@ const userRoutes = require('./routes/user.routes')
 const productRoutes = require('./routes/product.routes')
 const cors = require('cors')
 const categoryRoutes = require('./routes/category.routes')
+const orderRoutes = require('./routes/order.routes')
 
 //Habilitamos uso de los CORS
 app.use(cors())
@@ -14,6 +15,6 @@ app.use( express.static('public') )
 //Habilitamos método JSON para poder leer los datos del body
 app.use(express.json())
 
-app.use([ userRoutes, productRoutes, categoryRoutes ])
+app.use([ userRoutes, productRoutes, categoryRoutes, orderRoutes ])
 
 module.exports = app
