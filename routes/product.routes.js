@@ -15,7 +15,7 @@ router.post("/products", [ validation, isAdmin, upload ], productControllers.cre
 router.get("/products/:id", productControllers.getProductById)
 
 //Borrar un producto
-router.delete("/products/:id", productControllers.deleteProduct)
+router.delete("/products/:id", validation, productControllers.deleteProduct)
 
 //Editar un producto
 router.put("/products/:id", [ validation, isAdmin, upload ], productControllers.updateProduct)

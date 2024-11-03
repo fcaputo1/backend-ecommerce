@@ -4,7 +4,7 @@ const validation = require('../middlewares/auth')
 const router = require('express').Router()
 
 //Obtener todas las ordenes
-router.get("/orders", orderControllers.getOrders)
+router.get("/orders", validation, orderControllers.getOrders)
 
 //Crear orden
 router.post("/orders", validation, orderControllers.createOrder)
