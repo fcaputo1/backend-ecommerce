@@ -13,7 +13,7 @@ function validation(req, res, next) {
     jwt.verify(token, SECRET, (error, payload) => {
         if (error) {
             console.log(error)
-            res.status(401).send({
+            return res.status(401).send({
                 ok: false,
                 message: "Credenciales incorrectas"
             })

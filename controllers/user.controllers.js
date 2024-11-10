@@ -254,7 +254,7 @@ async function login(req, res) {
 
     } catch (error) {
         console.log(error)
-        res.status(500).send({
+        return res.status(500).send({
             ok: false,
             message: "Error al autenticar usuario"
         })
