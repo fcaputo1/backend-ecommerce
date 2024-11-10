@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
-
 const Schema = mongoose.Schema
+
+// Esquema para modelo de órdenes
 
 const orderSchema = new Schema({
     user: {

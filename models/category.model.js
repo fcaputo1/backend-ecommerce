@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
-
 const Schema = mongoose.Schema
+
+//Esquema para modelo de categorías
 
 const categorySchema = new Schema({
     name: { type: String, required: true },

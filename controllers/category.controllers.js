@@ -1,5 +1,6 @@
 const Category = require('../models/category.model')
 
+//Trae todas las categorías
 async function getCategories(req, res) {
     try {
         const categories = await Category.find()
@@ -17,6 +18,7 @@ async function getCategories(req, res) {
     }
 }
 
+//Crear una categoría
 async function createCategory(req,res) {
     try {
         const data = new Category(req.body)

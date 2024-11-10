@@ -112,7 +112,7 @@ async function deleteUser(req, res) {
     try {
         const { id } = req.params
 
-        // Verificar que el token sea válido; si no, devuelve 401
+        // Verificar que el token sea válido. Si no, devuelve 401
         if (!req.user) {
             return res.status(401).send({
                 ok: false,

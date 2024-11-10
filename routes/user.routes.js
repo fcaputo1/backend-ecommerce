@@ -7,7 +7,7 @@ const isAdmin = require('../middlewares/isAdmin')
 const uploadFileUser = require('../middlewares/uploadFileUser')
 
 //Trae los usuarios desde la DB
-router.get("/users", validation, userControllers.getUsers)
+router.get("/users", [ validation, isAdmin ], userControllers.getUsers)
 
 //Guarda usuarios en la DB
 router.post("/users", uploadFileUser, userControllers.createUser)
